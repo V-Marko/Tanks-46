@@ -1,4 +1,4 @@
-package com.example.tanks46;
+package com.example.tanks46.model;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -10,13 +10,14 @@ public class Joystick {
     private final int hatRadius;
     private final Point center;
     private Point actuator = new Point(0, 0);
-    private Point current = new Point(0, 0);
+    private Point current;
     private boolean isActive = false;
 
     public Joystick(int centerX, int centerY, int baseRadius, int hatRadius) {
         center = new Point(centerX, centerY);
         this.baseRadius = baseRadius;
         this.hatRadius = hatRadius;
+        current = new Point(centerX, centerY);
     }
 
     public void draw(Canvas canvas, Paint paint) {
