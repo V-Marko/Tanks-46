@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+
 import com.example.tanks46.R;
 import com.example.tanks46.model.Joystick;
 import com.example.tanks46.model.Tank;
@@ -19,8 +20,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
     private int _TankWidth = 500;
     private int _TankHeight = 500;
     private int _JoystickX = 200;
-    private int _JoystickY;
-
+    private int _JoystickY =  getResources().getDisplayMetrics().heightPixels - 260;
     private Thread thread;
     private boolean isRunning = true;
     private Paint paint = new Paint();
@@ -42,17 +42,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
     private void init(Context context, AttributeSet attrs) {
         getHolder().addCallback(this);
         setFocusable(true);
-
         if (attrs != null) {
             TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.GameView);
             _TankWidth = a.getDimensionPixelSize(R.styleable.GameView_tankWidth, _TankWidth);
             _TankHeight = a.getDimensionPixelSize(R.styleable.GameView_tankHeight, _TankHeight);
             a.recycle();
-            Log.d("GameView", "TankWidth: " + _TankWidth + ", TankHeight: " + _TankHeight); // Отладка
+            Log.d("GameView", "TankWidth: " + _TankWidth + ", TankHeight: " + _TankHeight);
         }
         player = new Tank(context, _TankWidth, _TankHeight);
-
-        _JoystickY = getResources().getDisplayMetrics().heightPixels - 200;
         joystick = new Joystick(_JoystickX, _JoystickY, 150, 75);
         lastFrameTime = System.nanoTime();
     }
@@ -61,22 +58,19 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
     public void run() {
         while (isRunning) {
             if (!getHolder().getSurface().isValid()) continue;
-
             long currentTime = System.nanoTime();
             float deltaTime = (currentTime - lastFrameTime) / 1_000_000_000.0f;
             lastFrameTime = currentTime;
-
             Canvas canvas = getHolder().lockCanvas();
             if (canvas != null) {
                 canvas.drawColor(Color.BLACK);
-                int screenWidth = canvas.getWidth(); // Динамическая ширина
-                int screenHeight = canvas.getHeight(); // Динамическая высота
+                int screenWidth = canvas.getWidth();
+                int screenHeight = canvas.getHeight();
                 player.update(joystick.getActuatorX(), joystick.getActuatorY(), deltaTime, screenWidth, screenHeight);
                 player.draw(canvas);
                 joystick.draw(canvas, paint);
                 getHolder().unlockCanvasAndPost(canvas);
             }
-
             try {
                 Thread.sleep(17);
             } catch (InterruptedException e) {
@@ -84,14 +78,17 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
             }
         }
     }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        Point touch = new Point((int)event.getX(), (int)event.getY());
+        Point touch = new Point((int) event.getX(), (int) event.getY());
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 joystickPressed = joystick.isPressed(touch);
                 if (joystickPressed) {
                     joystick.update(touch);
+                } else {
+                    player.shoot();
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
@@ -127,4 +124,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {}
+
+    public void shoot() {
+        player.shoot();
+    }
 }

@@ -8,6 +8,15 @@
         android:id="@+id/gameView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:tankWidth="100dp"
-    app:tankHeight="100dp" />
+        app:tankHeight="100dp"
+        app:tankWidth="100dp" />
+
+    <ImageButton
+        android:id="@+id/myButton"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/button_shoot" />
 </FrameLayout>
