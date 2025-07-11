@@ -19,4 +19,65 @@
         android:layout_margin="16dp"
         android:background="@android:color/transparent"
         android:src="@drawable/button_shoot" />
+
+<!--    <TextView-->
+<!--        android:id="@+id/ammoTextView"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="top|end"-->
+<!--        android:layout_margin="16dp"-->
+<!--        android:text="5/5"-->
+<!--        android:textSize="24sp"-->
+<!--        android:textColor="#FFFFFF" />-->
+
+    <GridLayout
+        android:id="@+id/ammoLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_margin="16dp"
+        android:columnCount="3"
+        android:rowCount="2"
+        android:alignmentMode="alignMargins"
+        android:useDefaultMargins="true">
+
+        <ImageView
+            android:id="@+id/bullet1"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/bullet" />
+
+        <ImageView
+            android:id="@+id/bullet2"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/bullet" />
+
+        <ImageView
+            android:id="@+id/bullet3"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/bullet" />
+
+        <ImageView
+            android:id="@+id/bullet4"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/bullet" />
+
+        <ImageView
+            android:id="@+id/bullet5"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/bullet" />
+
+        <ImageView
+            android:id="@+id/bullet6"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/bullet" />
+
+    </GridLayout>
+
+
 </FrameLayout>

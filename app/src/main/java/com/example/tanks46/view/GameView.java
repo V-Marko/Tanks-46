@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -20,7 +19,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
     private int _TankWidth = 500;
     private int _TankHeight = 500;
     private int _JoystickX = 200;
-    private int _JoystickY =  getResources().getDisplayMetrics().heightPixels - 260;
+    private int _JoystickY = getResources().getDisplayMetrics().heightPixels - 260;
     private Thread thread;
     private boolean isRunning = true;
     private Paint paint = new Paint();
@@ -28,11 +27,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
     private Joystick joystick;
     private boolean joystickPressed = false;
     private long lastFrameTime;
-
-    public GameView(Context context) {
-        super(context);
-        init(context, null);
-    }
 
     public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -47,7 +41,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
             _TankWidth = a.getDimensionPixelSize(R.styleable.GameView_tankWidth, _TankWidth);
             _TankHeight = a.getDimensionPixelSize(R.styleable.GameView_tankHeight, _TankHeight);
             a.recycle();
-            Log.d("GameView", "TankWidth: " + _TankWidth + ", TankHeight: " + _TankHeight);
         }
         player = new Tank(context, _TankWidth, _TankHeight);
         joystick = new Joystick(_JoystickX, _JoystickY, 150, 75);
@@ -58,9 +51,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
     public void run() {
         while (isRunning) {
             if (!getHolder().getSurface().isValid()) continue;
+
             long currentTime = System.nanoTime();
             float deltaTime = (currentTime - lastFrameTime) / 1_000_000_000.0f;
             lastFrameTime = currentTime;
+
             Canvas canvas = getHolder().lockCanvas();
             if (canvas != null) {
                 canvas.drawColor(Color.BLACK);
@@ -71,6 +66,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
                 joystick.draw(canvas, paint);
                 getHolder().unlockCanvasAndPost(canvas);
             }
+
             try {
                 Thread.sleep(17);
             } catch (InterruptedException e) {
@@ -87,8 +83,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
                 joystickPressed = joystick.isPressed(touch);
                 if (joystickPressed) {
                     joystick.update(touch);
-                } else {
-                    player.shoot();
                 }
                 break;
             case MotionEvent.ACTION_MOVE:

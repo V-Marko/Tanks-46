@@ -22,28 +22,26 @@ public class Bullet {
         this.y = y;
         this.rotation = rotation;
 
-        // Загружаем и масштабируем изображение пули
-        Bitmap originalBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.bullet);
-        bitmap = Bitmap.createScaledBitmap(originalBitmap, width, height, true);
+        bitmap = Bitmap.createScaledBitmap(
+                BitmapFactory.decodeResource(context.getResources(), R.drawable.bullet),
+                width, height, true
+        );
 
-        // Загружаем и масштабируем изображения анимации пули
-        Bitmap fireBitmap1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.bullet_fire);
-        Bitmap fireBitmap2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.bullet_fire2);
-        fireBitmaps = new Bitmap[]{
-                Bitmap.createScaledBitmap(fireBitmap1, width, height, true),
-                Bitmap.createScaledBitmap(fireBitmap2, width, height, true)
+        fireBitmaps = new Bitmap[] {
+                Bitmap.createScaledBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.bullet_fire), width, height, true),
+                Bitmap.createScaledBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.bullet_fire2), width, height, true)
         };
 
         lastFrameTime = System.nanoTime();
     }
 
     public void update(float deltaTime) {
-        x += (float) (speed * Math.cos(Math.toRadians(rotation)));
-        y += (float) (speed * Math.sin(Math.toRadians(rotation)));
+        x += speed * Math.cos(Math.toRadians(rotation));
+        y += speed * Math.sin(Math.toRadians(rotation));
 
         if (isAnimating) {
             long currentTime = System.nanoTime();
-            if (currentTime - lastFrameTime > 100000000) { // Смена кадра каждые 100 мс
+            if (currentTime - lastFrameTime > 100_000_000) {
                 currentFrame = (currentFrame + 1) % fireBitmaps.length;
                 lastFrameTime = currentTime;
             }
@@ -55,11 +53,7 @@ public class Bullet {
         matrix.postRotate(rotation, bitmap.getWidth() / 2f, bitmap.getHeight() / 2f);
         matrix.postTranslate(x - bitmap.getWidth() / 2f, y - bitmap.getHeight() / 2f);
 
-        if (isAnimating) {
-            canvas.drawBitmap(fireBitmaps[currentFrame], matrix, null);
-        } else {
-            canvas.drawBitmap(bitmap, matrix, null);
-        }
+        canvas.drawBitmap(isAnimating ? fireBitmaps[currentFrame] : bitmap, matrix, null);
     }
 
     public void startAnimation() {

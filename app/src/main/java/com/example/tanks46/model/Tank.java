@@ -13,12 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Tank {
-    //Bullet
-    public int _BulletWidth = 100;
-    public int _BulletHeight = 100;
-
-
-    private Context context; // Store the context
+    private Context context;
     private Bitmap bitmap;
     public float x, y;
     private float _speed = 10;
@@ -29,11 +24,7 @@ public class Tank {
     public Tank(Context context, int width, int height) {
         this.context = context;
         Bitmap originalBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.tank_player);
-        if (originalBitmap != null) {
-            bitmap = Bitmap.createScaledBitmap(originalBitmap, width, height, true);
-        } else {
-            throw new IllegalStateException("Resource tank_player not found");
-        }
+        bitmap = Bitmap.createScaledBitmap(originalBitmap, width, height, true);
         x = 500;
         y = 500;
     }
@@ -58,24 +49,23 @@ public class Tank {
             while (rotation < 0) rotation += 360;
         }
 
-        // Use an iterator to safely remove bullets while iterating
         Iterator<Bullet> iterator = bullets.iterator();
         while (iterator.hasNext()) {
             Bullet bullet = iterator.next();
             bullet.update(deltaTime);
             if (bullet.isOutOfBounds(screenWidth, screenHeight)) {
-                iterator.remove(); // Safely remove the bullet
+                iterator.remove();
             }
         }
     }
+
     public void draw(Canvas canvas) {
         Matrix matrix = new Matrix();
         matrix.postRotate(rotation, bitmap.getWidth() / 2f, bitmap.getHeight() / 2f);
         matrix.postTranslate(x, y);
         canvas.drawBitmap(bitmap, matrix, null);
 
-        List<Bullet> bulletsCopy = new ArrayList<>(bullets);
-        for (Bullet bullet : bulletsCopy) {
+        for (Bullet bullet : bullets) {
             bullet.draw(canvas);
         }
     }
@@ -89,12 +79,10 @@ public class Tank {
                 x + bitmap.getWidth() / 2f + offsetX,
                 y + bitmap.getHeight() / 2f + offsetY,
                 rotation,
-                _BulletWidth,
-                _BulletHeight
-
+                100,
+                100
         );
         bullet.startAnimation();
         bullets.add(bullet);
     }
-
 }
